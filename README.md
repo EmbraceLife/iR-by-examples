@@ -145,9 +145,9 @@ merge(x,y, join='right') # keep all right, leaving left NA
 
 #### merge 3 or more xts
 ```r
-### how to control inner, left, right for more than 2 objects
+full <- merge(shls_return, ssgf_return, jqr_return )
+full_inner <- merge(merge(shls_return, ssgf_return, join = "inner"), jqr_return, join = "inner")
 merge(merge(x,z, join = "left"),y,join='left')[,c(1,3,2)]
-x %>% merge(y, join = "left") %>% merge(z, join = "left")
 m <- x %>% merge(y, join = "left") %>% merge(z, join = "left")
 names(m) <-  c("x", "y", "z")
 ```
@@ -165,7 +165,22 @@ sample.xts['2006-01-03/2007']
 if_min["2010-10-01 09:20:00/2012-05-03"] %>% tail() # head, tail
 ```
 
+#### extract a price without a date attached from xts
+```r
+shls_origin <- shls.xts["2011-03-02"]$Close[[1]]
+```
 
+#### convert xts => data.frame
+```r
+shls.xts %>% as.data.frame() %>% mutate(Date = shls.xts %>% index()) %>% glimpse()
+```
+
+#### remove/ignore/acess rownames
+```r
+full_df <- full %>% as.data.frame(row.names = F)
+full_df %>% rownames()
+write.csv(full_df, file = "/Users/Natsume/Documents/1learnD3/R4D3/stocks_returns.csv", row.names = F)
+```
 
 ##### use of dplyr
 ```r
